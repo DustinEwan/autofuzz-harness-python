@@ -1,0 +1,5 @@
+{
+  "name": "python",
+  "command": ["python3", "src/server.py"],
+  "conformance": { "emitter": ["python3", "conformance/emit.py"], "deadlineMs": 1500 }
+}

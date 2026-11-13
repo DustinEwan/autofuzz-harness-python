@@ -1,0 +1,27 @@
+{
+  "project": "pricing-test-target",
+  "codebase": {
+    "harness": "python",
+    "include": [
+      "**/*.py"
+    ],
+    "exclude": [
+      "**/__pycache__/**"
+    ]
+  },
+  "oracles": {},
+  "budget": {
+    "invocations": 20000,
+    "wallClockMs": 900000,
+    "workers": 0,
+    "maxCorpus": 2048,
+    "strategy": "guided"
+  },
+  "output": {
+    "dir": ".autofuzz",
+    "renderers": [
+      "json",
+      "markdown"
+    ]
+  }
+}
