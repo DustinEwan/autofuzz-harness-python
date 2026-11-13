@@ -77,7 +77,7 @@ def _log(message):
 
 
 def handshake(_params):
-    # `name` is the `codebase.harness` value the shipped harnesses report (`js-ts`, `wasm`).
+    # `name` is the `harness.name` value the shipped harnesses report (`js-ts`, `wasm`).
     # `minimize` is absent from the capabilities: the engine never sends it and this plugin
     # does not answer it, which section 6 of the guide says is the honest pairing.
     # `reproducer` is declared and answered: the engine asks the plugin that owns the target

@@ -15,7 +15,7 @@ Install drives the conformance suite against `src/server.py` before it records a
 A scan project names the harness and no command:
 
 ```json
-{ "codebase": { "harness": "python" } }
+{ "harness": { "name": "python" } }
 ```
 
 The engine resolves the plugin argv from the registry record. To try the plugin on the fixture that ships here:

@@ -27,7 +27,7 @@ VIA_DEADLINE_CUT = "deadline-cut"
 
 
 def read_reject_classes(config_path):
-    """`codebase.rejectClasses` from the scan project file, the way `server.ts:128` reads it."""
+    """`harness.options.rejectClasses` from the scan project file, the way `server.ts:128` reads it."""
     if not config_path:
         return list(DEFAULT_REJECT_CLASSES)
     try:
@@ -35,8 +35,9 @@ def read_reject_classes(config_path):
             parsed = json.load(handle)
     except (OSError, ValueError):
         return list(DEFAULT_REJECT_CLASSES)
-    codebase = parsed.get("codebase") if isinstance(parsed, dict) else None
-    declared = codebase.get("rejectClasses") if isinstance(codebase, dict) else None
+    harness = parsed.get("harness") if isinstance(parsed, dict) else None
+    options = harness.get("options") if isinstance(harness, dict) else None
+    declared = options.get("rejectClasses") if isinstance(options, dict) else None
     if not isinstance(declared, list):
         return list(DEFAULT_REJECT_CLASSES)
     return [name for name in declared if isinstance(name, str)]

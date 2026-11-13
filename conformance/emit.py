@@ -103,8 +103,8 @@ def spin(seconds: float) -> str:
 
 AUTOFUZZ_JSON = {
     "project": "conformance-python",
-    "codebase": {
-        "harness": "python",
+    "harness": {
+        "name": "python",
         # No `command`: the plugin the suite launches is the one `afz-harness.json` names, and
         # a rendered project that baked in the plugin's path would break the moment it is
         # rendered under the registry instead of the checkout.

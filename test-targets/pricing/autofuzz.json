@@ -1,7 +1,7 @@
 {
   "project": "pricing-test-target",
-  "codebase": {
-    "harness": "python",
+  "harness": {
+    "name": "python",
     "include": [
       "**/*.py"
     ],

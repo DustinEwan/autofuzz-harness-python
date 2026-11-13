@@ -16,12 +16,14 @@ import json
 import os
 import re
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
 package_root = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(package_root / "src"))
 
+import classify  # noqa: E402  (the import needs the sys.path insert above)
 import protocol  # noqa: E402  (the import needs the sys.path insert above)
 
 # The wire-vocabulary contract lives in the engine repository. `AFZ_DOCS` names an engine
@@ -146,6 +148,24 @@ class WireVocabulary(unittest.TestCase):
         self.assertEqual(ok["required"], ["ok", "materialized"])
         self.assertEqual(skip["required"], ["ok", "reason"])
         self.assertEqual(sorted(prepare["$defs"]["MaterializedCall"]["properties"]), ["handle", "summary"])
+
+    def test_reject_classes_reader_follows_the_harness_options_path(self):
+        # A scan project that declares its refusal classes must have them read from
+        # `harness.options.rejectClasses`. A reader that silently fell back to the defaults
+        # would reclassify every guard in the project, and nothing else would notice - so
+        # this is that check. The marker class is not in the defaults, so a fallback cannot
+        # pass.
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "autofuzz.json"
+            path.write_text(
+                json.dumps({"project": "p", "harness": {"name": "python", "options": {"rejectClasses": ["PricingRefusal"]}}}),
+                encoding="utf8",
+            )
+            self.assertEqual(classify.read_reject_classes(str(path)), ["PricingRefusal"])
+        # And the checked-in project must declare the block the reader reads.
+        project = json.loads((package_root / "test-targets" / "pricing" / "autofuzz.json").read_text(encoding="utf8"))
+        self.assertNotIn("codebase", project)
+        self.assertEqual(project["harness"]["name"], "python")
 
 
 class EmittedShapes(unittest.TestCase):
