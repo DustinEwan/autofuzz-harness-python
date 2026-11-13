@@ -42,7 +42,7 @@ jobs:
           python-version: "3.14"
 
       - name: Install afz
-        run: cargo install --git https://github.com/DustinEwan/autofuzz.git --bin afz --locked
+        run: cargo install --git https://github.com/DustinEwan/autofuzz.git afz-cli --locked
 
       - name: Validate
         run: afz install-harness "$GITHUB_WORKSPACE" --json > report.json
