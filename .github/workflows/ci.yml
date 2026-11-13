@@ -1,0 +1,58 @@
+name: ci
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # The plugin's own suite: stdlib unittest, no Rust binary, no third-party package. The
+  # wire-vocabulary contract test reads the engine's docs, named with AFZ_DOCS.
+  harness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/checkout@v4
+        with:
+          repository: DustinEwan/autofuzz
+          path: .engine
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Tests
+        run: AFZ_DOCS=$GITHUB_WORKSPACE/.engine/docs python3 -m unittest discover -s test -t .
+
+  # The conformance gate, run through the product command rather than a bespoke harness:
+  # `afz install-harness` drives the suite and prints the report.
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install afz
+        run: cargo install --git https://github.com/DustinEwan/autofuzz.git --bin afz --locked
+
+      - name: Validate
+        run: afz install-harness "$GITHUB_WORKSPACE" --json > report.json
+
+      # The goldens this repository publishes: zero violations, all ten template properties
+      # pass, and the fixture validator passes all seven fixture-shaped ids. A deleted or
+      # gutted validator fails the second assertion.
+      - name: Assert the report
+        run: |
+          jq -e '((.violations | length) == 0)
+                 and ((.template.properties | map(select(.verdict == "not-applicable")) | length) == 0)
+                 and ((.template.properties | map(select(.verdict == "pass")) | length) == 10)' report.json
+          jq -e '(.validator.properties | map(select(.verdict == "pass")) | length) == 7' report.json

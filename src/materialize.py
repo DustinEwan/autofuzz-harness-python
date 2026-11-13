@@ -2,7 +2,7 @@
 
 Two directions live here. `materialize` turns the engine's generated tree into the
 arguments of one call; a node the harness cannot build raises `MaterializationError`,
-the Python mirror of `packages/harness-js/src/materialize.ts:59-73`. `to_value_tree`
+the Python mirror of `src/materialize.ts:59-73` in `autofuzz-harness-js-ts`. `to_value_tree`
 lowers a target's return value back onto the wire.
 """
 

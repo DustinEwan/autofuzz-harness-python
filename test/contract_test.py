@@ -1,4 +1,4 @@
-"""The wire-vocabulary pin, the Python twin of `packages/harness-js/test/contract.test.mjs`.
+"""The wire-vocabulary pin, the Python twin of `test/contract.test.mjs` in `autofuzz-harness-js-ts`.
 
 The two sides of the plugin boundary are written in different languages and built
 separately. This file is where they are checked against each other: every literal
@@ -9,10 +9,11 @@ documents that pin the protocol-version string itself.
 
 Run with the stdlib runner, no pytest:
 
-    python3 -m unittest discover -s packages/harness-py/test -t packages/harness-py
+    python3 -m unittest discover -s test -t .
 """
 
 import json
+import os
 import re
 import sys
 import unittest
@@ -23,10 +24,12 @@ sys.path.insert(0, str(package_root / "src"))
 
 import protocol  # noqa: E402  (the import needs the sys.path insert above)
 
-repo_root = package_root.parents[1]
-schema_dir = repo_root / "docs" / "schema"
-design = repo_root / "docs" / "architecture.md"
-guide = repo_root / "docs" / "harness-authoring.md"
+# The wire-vocabulary contract lives in the engine repository. `AFZ_DOCS` names an engine
+# checkout's docs directory; the default is the sibling checkout CI and local work share.
+docs_dir = Path(os.environ.get("AFZ_DOCS", str(package_root.parents[0] / "autofuzz" / "docs")))
+schema_dir = docs_dir / "schema"
+design = docs_dir / "architecture.md"
+guide = docs_dir / "harness-authoring.md"
 
 
 def schema(name):

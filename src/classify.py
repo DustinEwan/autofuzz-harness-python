@@ -1,4 +1,4 @@
-"""The one classification rule, ported line for line from `packages/harness-js/src/classify.ts`.
+"""The one classification rule, ported line for line from `src/classify.ts` in `autofuzz-harness-js-ts`.
 
 A declared rejection is a finding-free `rejected`; anything else that escapes is a
 `failed` finding. The rule reads `TargetDescriptor.guardSites`, the lines inside the

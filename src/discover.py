@@ -3,7 +3,7 @@
 Discovery reads declarations only (`docs/architecture.md#the-seven-methods`): importing user code to
 enumerate it runs that code inside the plugin. A symbol the engine cannot build inputs
 for is reported as `skipped` and never as a target, so `constructible + fixture-required
-+ opaque == discovered` holds by construction (`packages/harness-js/src/discover.ts:407-411`).
++ opaque == discovered` holds by construction (`src/discover.ts:407-411` in `autofuzz-harness-js-ts`).
 """
 
 import ast
@@ -26,7 +26,7 @@ NON_ENTRY_DECORATORS = frozenset({"property", "staticmethod", "classmethod", "ab
 
 
 def target_id(module_path, name, signature):
-    """The `packages/harness-js/src/discover.ts:650-653` digest, so ids match across processes."""
+    """The `src/discover.ts:650-653` digest in `autofuzz-harness-js-ts`, so ids match across processes."""
     digest = hashlib.sha256(f"{module_path}\0{name}\0{signature}".encode("utf-8")).hexdigest()
     return f"afz:t:{digest[:12]}"
 
