@@ -45,12 +45,12 @@ METHOD_READY = "ready"
 
 # --- closed vocabularies -------------------------------------------------------
 
-# `docs/schema/handshake.json` $defs.Capability. Only `coverage`, `reproducer`, and `readiness`
+# `docs/schema/afz-1/handshake.json` $defs.Capability. Only `coverage`, `reproducer`, and `readiness`
 # change engine behavior today; this harness declares `coverage` and `reproducer`, because its
 # environment is the tree discovery reads and there is nothing for `ready` to prove.
 CAPABILITIES = ("coverage", "minimize", "reproducer", "sideEffects", "stateful", "concurrent", "readiness")
 
-# `docs/schema/skipped-target.json` $defs.SkipReason.
+# `docs/schema/afz-1/skipped-target.json` $defs.SkipReason.
 SKIP_REASONS = (
     "unconstructible-parameter",
     "discovery-error",
@@ -60,10 +60,10 @@ SKIP_REASONS = (
     "target-disabled",
 )
 
-# `docs/schema/target-descriptor.json` $defs.Materialization.
+# `docs/schema/afz-1/target-descriptor.json` $defs.Materialization.
 MATERIALIZATIONS = ("constructible", "fixture-required", "opaque")
 
-# `docs/schema/type-node.json` oneOf tags.
+# `docs/schema/afz-1/type-node.json` oneOf tags.
 TYPE_NODE_KINDS = (
     "scalar",
     "stringFormat",
@@ -80,7 +80,7 @@ TYPE_NODE_KINDS = (
     "ref",
 )
 
-# `docs/schema/value-tree.json` oneOf tags.
+# `docs/schema/afz-1/value-tree.json` oneOf tags.
 VALUE_NODE_TAGS = (
     "null",
     "undefined",

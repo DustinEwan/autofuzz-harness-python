@@ -1,4 +1,4 @@
-"""Materialize a `ValueTree` (`docs/schema/value-tree.json`) into Python objects.
+"""Materialize a `ValueTree` (`docs/schema/afz-1/value-tree.json`) into Python objects.
 
 Two directions live here. `materialize` turns the engine's generated tree into the
 arguments of one call; a node the harness cannot build raises `MaterializationError`,

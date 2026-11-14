@@ -69,7 +69,7 @@ def tags(document, field, what):
 
 class WireVocabulary(unittest.TestCase):
     def test_protocol_version_matches_the_guide(self):
-        # docs/schema/handshake.json types protocolVersion as a plain string and carries no
+        # docs/schema/afz-1/handshake.json types protocolVersion as a plain string and carries no
         # value, so the guide is the only document that pins it. A guide that drifts from
         # crates/afz-protocol fails here.
         text = re.sub(r"\s+", " ", guide.read_text(encoding="utf8"))
@@ -179,7 +179,7 @@ class EmittedShapes(unittest.TestCase):
         for part in path:
             node = node[part]
         unknown = emitted - set(node["properties"])
-        self.assertEqual(unknown, set(), f"{what} emits keys docs/schema/{document_name} does not define: {unknown}")
+        self.assertEqual(unknown, set(), f"{what} emits keys docs/schema/{schema_dir.name}/{document_name} does not define: {unknown}")
 
     def test_target_descriptor_keys(self):
         self._assert_subset(protocol.TARGET_DESCRIPTOR_KEYS, "target-descriptor.json", [], "TargetDescriptor")
