@@ -29,7 +29,9 @@ import protocol  # noqa: E402  (the import needs the sys.path insert above)
 # The wire-vocabulary contract lives in the engine repository. `AFZ_DOCS` names an engine
 # checkout's docs directory; the default is the sibling checkout CI and local work share.
 docs_dir = Path(os.environ.get("AFZ_DOCS", str(package_root.parents[0] / "autofuzz" / "docs")))
-schema_dir = docs_dir / "schema"
+# One directory per protocol revision (engine decision 0016); derive it from the literal
+# this plugin speaks, so dropping the revision fails here rather than at an install.
+schema_dir = docs_dir / "schema" / protocol.PROTOCOL_VERSION.replace("/", "-")
 design = docs_dir / "architecture.md"
 guide = docs_dir / "harness-authoring.md"
 
