@@ -31,8 +31,8 @@ PROTOCOL_VERSION = "afz/1"
 HARNESS_NAME = "python"
 HARNESS_VERSION = "0.1.0"
 
-# The seven wire names of `crates/afz-protocol/src/rpc.rs` `Method::name`.
-METHOD_NAMES = ("handshake", "discover", "prepare", "invoke", "minimize", "reproducer", "coverageMap")
+# The eight wire names of `crates/afz-protocol/src/rpc.rs` `Method::name`.
+METHOD_NAMES = ("handshake", "discover", "prepare", "invoke", "minimize", "reproducer", "coverageMap", "ready")
 
 METHOD_HANDSHAKE = "handshake"
 METHOD_DISCOVER = "discover"
@@ -41,12 +41,14 @@ METHOD_INVOKE = "invoke"
 METHOD_MINIMIZE = "minimize"
 METHOD_REPRODUCER = "reproducer"
 METHOD_COVERAGE_MAP = "coverageMap"
+METHOD_READY = "ready"
 
 # --- closed vocabularies -------------------------------------------------------
 
-# `docs/schema/handshake.json` $defs.Capability. Only `coverage` and `reproducer` change engine
-# behavior today; this harness declares exactly those two.
-CAPABILITIES = ("coverage", "minimize", "reproducer", "sideEffects", "stateful", "concurrent")
+# `docs/schema/handshake.json` $defs.Capability. Only `coverage`, `reproducer`, and `readiness`
+# change engine behavior today; this harness declares `coverage` and `reproducer`, because its
+# environment is the tree discovery reads and there is nothing for `ready` to prove.
+CAPABILITIES = ("coverage", "minimize", "reproducer", "sideEffects", "stateful", "concurrent", "readiness")
 
 # `docs/schema/skipped-target.json` $defs.SkipReason.
 SKIP_REASONS = (
