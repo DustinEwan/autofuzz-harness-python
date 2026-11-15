@@ -2,7 +2,7 @@
 """Render the conformance fixture project for this harness.
 
 `afz validate-harness` and `afz-xtask check-harness` validate a plugin against the template
-(`crates/afz-conformance/template/v1.json`): ten semantic properties stated as wire-level
+(`crates/afz-conformance/template/v1.json`): twelve semantic properties stated as wire-level
 expectations. This emitter writes a small package that realizes every property, the
 `autofuzz.json` that points a plugin at it, and `afz-conformance-manifest.json` naming the
 symbol behind each property. The suite, not this file, decides pass/fail: it drives the
@@ -99,7 +99,30 @@ def spin(seconds: float) -> str:
     """deadline-sleep: sleeps far past any deadline the suite passes."""
     time.sleep(seconds)
     return "done"
+
+
+def rate_for(region: str):
+    """opaque-return: returns a closure, which has no `ValueTree` form at all. The call
+    reaches the return unconditionally, so the answer must be ok with no value."""
+    return lambda amount: amount * 1.1
 '''
+
+# The second fixture module. `unbuildable-symbol` needs a symbol discovery accepts on its
+# declared signature but that the harness's own build cannot produce, and it has to fail
+# alone: a fixture that took its siblings down would fail the isolation half of the rule.
+BROKEN_PY = '''"""Rendered by conformance/emit.py - do not edit by hand."""
+
+# The import is the fixture: it fails when the module is executed, which is `prepare`, not
+# when it is parsed, which is `discover`. Nothing else in the project imports this module.
+from afz_conformance_missing_module import quote  # noqa: F401  (unused on purpose)
+
+
+def unbuildable(amount: int) -> int:
+    """unbuildable-symbol: one constructible parameter, a clean body; the module around it
+    will not load, so `prepare` must answer ok:false with reason `discovery-error`."""
+    return amount * 2
+'''
+
 
 AUTOFUZZ_JSON = {
     "project": "conformance-python",
@@ -153,6 +176,10 @@ MANIFEST = {
         "reproducer-script": {"symbol": "tiered_price", "input": [big_int(5)]},
         # 30 s against the suite's 1000 ms default: only a real cut answers inside the deadline.
         "deadline-sleep": {"symbol": "spin", "input": [number(30)]},
+        # A closure has no `ValueTree` form: the call answers ok and carries no value.
+        "opaque-return": {"symbol": "rate_for", "input": [string("EU")]},
+        # Listed by discovery, skipped by prepare, and `Invoice.add_line` still prepares.
+        "unbuildable-symbol": {"symbol": "unbuildable", "input": [big_int(2)]},
     },
     # The project judges its own fixture, standard library only, with the plugin out of the
     # path.
@@ -164,6 +191,7 @@ def emit(out: Path) -> None:
     (out / "src").mkdir(parents=True, exist_ok=True)
     (out / "conformance").mkdir(parents=True, exist_ok=True)
     (out / "src" / "pricing.py").write_text(PRICING_PY, encoding="utf-8")
+    (out / "src" / "broken.py").write_text(BROKEN_PY, encoding="utf-8")
     shutil.copyfile(Path(__file__).resolve().parent / "validate.py", out / "conformance" / "validate.py")
     (out / "autofuzz.json").write_text(json.dumps(AUTOFUZZ_JSON, indent=2) + "\n", encoding="utf-8")
     (out / "afz-conformance-manifest.json").write_text(json.dumps(MANIFEST, indent=2) + "\n", encoding="utf-8")

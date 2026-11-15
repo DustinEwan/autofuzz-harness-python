@@ -73,7 +73,14 @@ def respond_error(request_id, code, message):
 
 
 def _log(message):
-    sys.stderr.write(f"afz-python: {message}\n")
+    # stderr is a diagnostic channel and never part of an answer. The engine drains it, but
+    # a drain can go away, and a write that then fails must not turn a correct `prepare`
+    # skip into an error frame - the same trade `autofuzz-harness-js-ts/src/server.ts:520`
+    # makes: silence answers better than a failure the engine would misread as a target's.
+    try:
+        sys.stderr.write(f"afz-python: {message}\n")
+    except (OSError, ValueError):
+        pass
 
 
 def handshake(_params):

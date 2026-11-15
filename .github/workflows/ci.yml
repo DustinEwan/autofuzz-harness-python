@@ -47,12 +47,12 @@ jobs:
       - name: Validate
         run: afz install-harness "$GITHUB_WORKSPACE" --json > report.json
 
-      # The goldens this repository publishes: zero violations, all ten template properties
-      # pass, and the fixture validator passes all seven fixture-shaped ids. A deleted or
-      # gutted validator fails the second assertion.
+      # The goldens this repository publishes: zero violations, all twelve template
+      # properties pass, and the fixture validator passes all seven fixture-shaped ids. A
+      # deleted or gutted validator fails the second assertion.
       - name: Assert the report
         run: |
           jq -e '((.violations | length) == 0)
                  and ((.template.properties | map(select(.verdict == "not-applicable")) | length) == 0)
-                 and ((.template.properties | map(select(.verdict == "pass")) | length) == 10)' report.json
+                 and ((.template.properties | map(select(.verdict == "pass")) | length) == 12)' report.json
           jq -e '(.validator.properties | map(select(.verdict == "pass")) | length) == 7' report.json

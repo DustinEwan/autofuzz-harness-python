@@ -73,8 +73,8 @@ class WireVocabulary(unittest.TestCase):
         # value, so the guide is the only document that pins it. A guide that drifts from
         # crates/afz-protocol fails here.
         text = re.sub(r"\s+", " ", guide.read_text(encoding="utf8"))
-        stated = re.search(r'`PROTOCOL_VERSION` is `"([^"]+)"', text)
-        self.assertIsNotNone(stated, "the guide no longer states the PROTOCOL_VERSION literal")
+        stated = re.search(r'`protocolVersion` is `"([^"]+)"', text)
+        self.assertIsNotNone(stated, "the guide no longer states the protocolVersion literal")
         self.assertEqual(protocol.PROTOCOL_VERSION, stated.group(1))
 
     def test_error_codes_match_the_guide(self):

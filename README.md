@@ -56,7 +56,7 @@ The emitter is a standalone program: `conformance/emit.py` imports `argparse`, `
 
 ## The conformance project
 
-`conformance/emit.py` renders a small pricing package and the manifest that names the symbol behind each template property. `conformance/validate.py` is the project's own fixture validator: it imports the rendered fixture and the standard library only — never the plugin, never the emitter — and the suite requires its verdicts to agree with the plugin's.
+`conformance/emit.py` renders a small pricing package — plus one module whose own import fails, the fixture `unbuildable-symbol` needs — and the manifest that names the symbol behind each of the twelve template properties. `conformance/validate.py` is the project's own fixture validator: it imports the rendered fixture and the standard library only — never the plugin, never the emitter — reports the seven fixture-shaped properties, and the suite requires its verdicts to agree with the plugin's.
 
 ## The contract
 
