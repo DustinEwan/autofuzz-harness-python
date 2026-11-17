@@ -58,7 +58,7 @@ jobs:
       # exits non-zero on any violation or suite error, so a broken wire contract fails this job.
       - name: Wire conformance
         run: |
-          cargo install plugin-rpc --bin prpc-core --version 0.1.0-alpha.8 --locked
+          cargo install plugin-rpc --bin prpc-core --version 0.1.0-alpha.11 --locked
           git clone --depth 1 https://github.com/DustinEwan/autofuzz.git "$RUNNER_TEMP/afz-engine"
           prpc-core "$RUNNER_TEMP/afz-engine/afz-1.profile.json" ./afz-harness.json --suite
 
