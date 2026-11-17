@@ -47,6 +47,21 @@ jobs:
       - name: Validate
         run: afz install-harness "$GITHUB_WORKSPACE" --json > report.json
 
+      # The mechanism's own conformance check: prpc-core spawns `python3 src/server.py` and runs
+      # the six wire rules (spawn, protocol-version, handshake-schema, unknown-method,
+      # framing-intact, process-alive), then runs the profile's suite program - `afz
+      # validate-harness` - and prints the profile's rules after the wire rules. The profile spec
+      # and the schemas it names come from a shallow clone of the engine rather than a copy in
+      # this repository, because a copy would drift from the engine this plugin is validated
+      # against. The runner runs from this workspace because the suite program resolves the
+      # manifest's relative paths, and the emitter, beside the directory it was started in. It
+      # exits non-zero on any violation or suite error, so a broken wire contract fails this job.
+      - name: Wire conformance
+        run: |
+          cargo install plugin-rpc --bin prpc-core --version 0.1.0-alpha.8 --locked
+          git clone --depth 1 https://github.com/DustinEwan/autofuzz.git "$RUNNER_TEMP/afz-engine"
+          prpc-core "$RUNNER_TEMP/afz-engine/afz-1.profile.json" ./afz-harness.json --suite
+
       # The goldens this repository publishes: zero violations, all twelve template
       # properties pass, and the fixture validator passes all seven fixture-shaped ids. A
       # deleted or gutted validator fails the second assertion.
